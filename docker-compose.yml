@@ -1,0 +1,26 @@
+# Development services. The published app is a single executable;
+# this compose file is only for day-to-day dev (API + Vite HMR).
+services:
+  api:
+    build:
+      context: ./src/Server
+    ports:
+      - "5080:5080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5080
+    volumes:
+      - acsm-data:/root/.local/share/ac-server-manager
+
+  web:
+    image: node:20-alpine
+    working_dir: /app
+    command: ["sh", "-c", "npm install && npm run dev -- --host"]
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./src/Web:/app
+      - /app/node_modules
+
+volumes:
+  acsm-data:

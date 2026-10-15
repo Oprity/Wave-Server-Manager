@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  build-test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: src/Web/package-lock.json
+
+      - name: Restore backend
+        run: dotnet restore
+
+      - name: Build backend
+        run: dotnet build --no-restore -c Release
+
+      - name: Backend tests
+        run: dotnet test --no-build -c Release
+
+      - name: Install frontend
+        working-directory: src/Web
+        run: npm ci
+
+      - name: Frontend typecheck + build
+        working-directory: src/Web
+        run: npm run build
+
+      - name: Frontend tests
+        working-directory: src/Web
+        run: npm run test
+
+      - name: Stage frontend into backend wwwroot
+        working-directory: src/Web
+        run: npm run build:server
+
+      - name: Publish single executable
+        run: dotnet publish src/Server -c Release -o publish

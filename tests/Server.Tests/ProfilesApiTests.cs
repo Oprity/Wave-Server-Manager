@@ -4,12 +4,9 @@
 
 using System.Net;
 using System.Net.Http.Json;
-using AcServerManager.Data;
 using AcServerManager.Dtos;
 using AcServerManager.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace AcServerManager.Tests;
 
@@ -118,14 +115,10 @@ public sealed class ProfilesApiFactory : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(Microsoft.AspNetCore.Hosting.IWebHostBuilder builder)
     {
-        var dbName = _dbName;
-        builder.ConfigureServices(services =>
-        {
-            var dbDescriptor = services.Single(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
-            services.Remove(dbDescriptor);
-            services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase(dbName));
-        });
-
+        // Select the InMemory provider via configuration: no container surgery,
+        // so EF10 never sees two providers composed on one options builder.
+        builder.UseSetting("Database:Provider", "InMemory");
+        builder.UseSetting("Database:ConnectionString", _dbName);
         builder.UseSetting("AcManager:AssettoServerExe", "");
     }
 }

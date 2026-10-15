@@ -26,6 +26,10 @@ public static class DatabaseServiceExtensions
             case "sqlite":
                 services.AddDbContext<AppDbContext>(o => o.UseSqlite(connectionString));
                 break;
+            case "inmemory":
+                // Tests and throwaway dev runs only: connectionString doubles as the store name.
+                services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase(connectionString));
+                break;
             case "sqlserver":
                 // Extension point for Milestone 3+: add Microsoft.EntityFrameworkCore.SqlServer
                 // and call o.UseSqlServer(connectionString) here. No other file needs changes.
@@ -33,7 +37,8 @@ public static class DatabaseServiceExtensions
                     "SQL Server provider is not wired up yet. Add the SqlServer EF Core package " +
                     "and implement the 'sqlserver' branch in DatabaseServiceExtensions.");
             default:
-                throw new InvalidOperationException($"Unknown Database:Provider '{provider}'. Expected 'Sqlite'.");
+                throw new InvalidOperationException(
+                    $"Unknown Database:Provider '{provider}'. Expected 'Sqlite' (or 'InMemory' for tests).");
         }
 
         return services;

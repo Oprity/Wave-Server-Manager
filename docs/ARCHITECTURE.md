@@ -1,6 +1,6 @@
 # Architecture (Milestone 1 + desktop shell)
 
-## Backend — `src/Server` (ASP.NET Core, .NET 8)
+## Backend — `src/Server` (ASP.NET Core, .NET 10)
 
 | File | Role |
 |---|---|

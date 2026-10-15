@@ -3,7 +3,7 @@
   <PropertyGroup>
     <!-- Windows GUI app: no console window. The smoke flag allocates one (see Program.cs). -->
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWindowsForms>true</UseWindowsForms>

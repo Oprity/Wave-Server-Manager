@@ -2,10 +2,11 @@
 
 ## M1 — 2026-10-15
 
-1. **.NET 8 (LTS), not .NET 10.** Only the .NET 9 SDK is installed on this machine and
-   offline SDK installs are out of scope; `net8.0` is the newest LTS that builds here.
-   Upgrade path: bump `TargetFramework` + EF packages to 10.x when the .NET 10 SDK is
-   available. Recorded so a reviewer knows the "latest LTS" deviation is environmental.
+1. **.NET 10 (LTS), supported through Nov 2028.** Retargeted from .NET 8 once the
+   .NET 10 SDK was available (EF Core 10.0.x, `global.json` pins `10.0.400` with
+   `latestFeature` roll-forward). Photino.NET 4.0.16 ships `net8.0`/`net9.0` assets
+   only; its `net8.0` build rolls forward onto .NET 10 with no code changes —
+   verified by the desktop launch check (window alive, backend serving).
 2. **Cars stored as CSV string**, not a join table. Keeps the model trivially portable
    across SQLite/SQL Server and maps 1:1 to both `server_cfg.ini` (`CARS=`) and
    `entry_list.ini` (`[CAR_N]`). Revisit if per-car metadata (skin, ballast) needs querying.
@@ -30,7 +31,8 @@
 
 ## Desktop shell — 2026-10-15
 
-11. **Photino.NET 4.0.16 for the native window.** Targets `net8.0` (matches the backend);
+11. **Photino.NET 4.0.16 for the native window.** Ships `net8.0`/`net9.0` assets; the
+    `net8.0` build rolls forward onto .NET 10 with no code changes (verified, see #1).
     API verified by reflection + a compile probe (`new PhotinoWindow()`, fluent setters,
     `Load(url)`, `WaitForClose()`). WebView2 fallback was not needed. WebView2 Runtime
     is a prerequisite but ships with Windows 11.

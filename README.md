@@ -45,10 +45,10 @@ docs). Never commit binaries, `content/`, `cars/`, `tracks/` or DLC files to thi
                                                └─────────────────────────┘
 ```
 
-- **Desktop** (`src/Desktop`, .NET 8 + Photino.NET 4): finds a free loopback port, starts
+- **Desktop** (`src/Desktop`, .NET 10 + Photino.NET 4): finds a free loopback port, starts
   the backend in-process (`AppHost.Create`), opens the window on it, owns the tray icon.
   Closing the window stops the backend and exits. `--smoke` runs a headless self-test.
-- **Backend** (`src/Server`, .NET 8 LTS): profile CRUD, EF Core models + migrations,
+- **Backend** (`src/Server`, .NET 10 LTS): profile CRUD, EF Core models + migrations,
   round-trip-safe INI reader/writer, process manager streaming stdout over SignalR,
   serves `wwwroot/` (the built React app) with `MapFallbackToFile("index.html")`.
 - **Database:** SQLite via EF Core. All provider selection lives in
@@ -63,7 +63,7 @@ docs). Never commit binaries, `content/`, `cars/`, `tracks/` or DLC files to thi
 ### Prerequisites
 
 - [WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/) (preinstalled on Windows 11)
-- [.NET 8 SDK](https://dotnet.microsoft.com/download) (latest LTS) — to build
+- [.NET 10 SDK](https://dotnet.microsoft.com/download) (latest LTS) — to build
 - [Node.js 20+](https://nodejs.org/) + npm — to build the UI
 - AssettoServer **0.54** (or stock AC server) installed **by you** — download from
   [AssettoServer releases](https://github.com/assetto-server/assetto/releases),

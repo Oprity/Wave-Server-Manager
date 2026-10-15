@@ -136,3 +136,13 @@
     permanent Setup page and a profiles banner. A browser can't return a folder
     path, so manual entry is a validated text field. Covered by
     `ContentDetectionTests` against fake Steam roots.
+
+## Zombie instances post-mortem — 2026-10-15
+
+26. **Photino windows have no `MainWindowHandle`, so `CloseMainWindow()` silently
+    no-ops** — repeated launches piled up headless backends and locked the exe.
+    Fixes: a `Global\WaveServerManager.SingleInstance` mutex (second launch focuses
+    the existing window via `FindWindow` + `SetForegroundWindow` and exits), the
+    launcher still force-kills as fallback, and `Environment.Exit` after `Run()`
+    guarantees no linger after close (a teardown hang was observed keeping the
+    process alive with no window and no backend).

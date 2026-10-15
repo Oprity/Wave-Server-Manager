@@ -26,6 +26,20 @@ internal static class Program
     [STAThread]
     private static int Main(string[] args)
     {
+        if (args.Any(a => string.Equals(a, "--smoke", StringComparison.OrdinalIgnoreCase)))
+        {
+            return SmokeSelfTest.Run();
+        }
+
+        // Single instance: a second launch focuses the running window and exits,
+        // so repeated double-clicks can never pile up zombie backends.
+        using var mutex = new Mutex(true, @"Global\WaveServerManager.SingleInstance", out var isFirst);
+        if (!isFirst)
+        {
+            FocusExistingWindow();
+            return 0;
+        }
+
         AppDomain.CurrentDomain.UnhandledException += (_, e) =>
         {
             LogFiles.AppendLine($"FATAL unhandled exception: {e.ExceptionObject}");
@@ -46,13 +60,12 @@ internal static class Program
 
         try
         {
-            if (args.Any(a => string.Equals(a, "--smoke", StringComparison.OrdinalIgnoreCase)))
-            {
-                return SmokeSelfTest.Run();
-            }
-
             var backendUrl = GetArgValue(args, "--backend-url");
-            return DesktopRunner.Run(backendUrl);
+            var code = DesktopRunner.Run(backendUrl);
+            // Belt and suspenders: the WebView2/STA teardown can keep CLR threads
+            // alive after the window closes; terminate deterministically.
+            Environment.Exit(code);
+            return code;
         }
         catch (Exception ex)
         {
@@ -71,6 +84,46 @@ internal static class Program
             }
         }
         return null;
+    }
+
+    private const int SwRestore = 9;
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    private static extern nint FindWindow(string? lpClassName, string lpWindowName);
+
+    [DllImport("user32.dll")]
+    private static extern bool SetForegroundWindow(nint hWnd);
+
+    [DllImport("user32.dll")]
+    private static extern bool ShowWindow(nint hWnd, int nCmdShow);
+
+    [DllImport("user32.dll")]
+    private static extern bool IsIconic(nint hWnd);
+
+    /// <summary>Brings the already-running window forward (best effort).</summary>
+    private static void FocusExistingWindow()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return;
+        }
+        try
+        {
+            var hwnd = FindWindow(null, "Wave Server Manager");
+            if (hwnd == 0)
+            {
+                return;
+            }
+            if (IsIconic(hwnd))
+            {
+                ShowWindow(hwnd, SwRestore);
+            }
+            SetForegroundWindow(hwnd);
+        }
+        catch
+        {
+            // Focusing is a courtesy; never fail startup over it.
+        }
     }
 }
 
@@ -115,6 +168,8 @@ internal static class DesktopRunner
                 .RegisterWebMessageReceivedHandler(HandleWebMessage)
                 .SetSize(new System.Drawing.Size(1280, 800))
                 .Center()
+                // Chromeless windows must not use OS-default size/location.
+                .SetUseOsDefaultLocation(false)
                 .SetResizable(true)
                 .SetDevToolsEnabled(false)
                 .SetContextMenuEnabled(false);
@@ -122,7 +177,8 @@ internal static class DesktopRunner
             {
                 window.SetIconFile(iconPath);
             }
-            window.Load(url);
+            // Uri overload: the string overload would be mistaken for a file path.
+            window.Load(new Uri(url));
 
             // Blocks on the native message loop (which also pumps tray messages).
             // Closing the window returns here, then we shut the backend down.

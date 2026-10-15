@@ -1,10 +1,10 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Microsoft.AspNetCore.SignalR;
 
-namespace AcServerManager.Hubs;
+namespace WaveServerManager.Hubs;
 
 /// <summary>
 /// Streams acServer stdout lines to the web UI. Clients join group

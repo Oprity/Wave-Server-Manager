@@ -1,4 +1,4 @@
-// AC Server Manager — AGPL-3.0-or-later (see LICENSE at repo root).
+// Wave Server Manager — AGPL-3.0-or-later (see LICENSE at repo root).
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';

@@ -4,8 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>AcServerManager</RootNamespace>
-    <AssemblyName>AcServerManager</AssemblyName>
+    <RootNamespace>WaveServerManager</RootNamespace>
+    <AssemblyName>WaveServerManager</AssemblyName>
     <!-- Backend serves the built frontend from wwwroot (copied from src/Web/dist). -->
     <DefaultItemExcludes>$(DefaultItemExcludes);wwwroot\**</DefaultItemExcludes>
   </PropertyGroup>

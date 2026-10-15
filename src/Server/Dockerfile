@@ -9,4 +9,4 @@ WORKDIR /app
 COPY --from=build /app/publish .
 ENV ASPNETCORE_URLS=http://+:5080
 EXPOSE 5080
-ENTRYPOINT ["dotnet", "AcServerManager.dll"]
+ENTRYPOINT ["dotnet", "WaveServerManager.dll"]

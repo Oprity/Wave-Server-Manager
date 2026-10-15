@@ -1,10 +1,10 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Microsoft.EntityFrameworkCore;
 
-namespace AcServerManager.Data;
+namespace WaveServerManager.Data;
 
 /// <summary>
 /// Single place where the database provider is chosen.
@@ -13,7 +13,7 @@ namespace AcServerManager.Data;
 /// </summary>
 public static class DatabaseServiceExtensions
 {
-    public const string DefaultSqliteFileName = "ac-server-manager.db";
+    public const string DefaultSqliteFileName = "wave-server-manager.db";
 
     public static IServiceCollection AddAppDatabase(this IServiceCollection services, IConfiguration config)
     {

@@ -67,6 +67,16 @@
     `UnobservedTask` handlers for crashes. Tray **View logs** opens the folder via
     `UseShellExecute`. Covered by `FileLoggingTests` (naming, append, prune, levels).
 
+## Rename to Wave Server Manager — 2026-10-15
+
+20. **Product is "Wave Server Manager"** (matches the GitHub repo name). Namespaces,
+    assemblies, window/tray titles, README, log messages and data folders
+    (`%AppData%\WaveServerManager`, `%LocalAppData%\WaveServerManager\logs`) all use
+    the new name; final exe is `WaveServerManager.Desktop.exe`. Directory layout
+    (`src/Server`, `src/Desktop`, `src/Web`, `tests/Server.Tests`) intentionally kept:
+    folders are organizational, and stable paths keep CI/Docker/scripts untouched.
+    Solution file is the new SDK-default `.slnx` format (created by .NET 10 CLI).
+
 ## Upstream AssettoServer — 2026-10-15
 
 19. **Real upstream is [compujuckel/AssettoServer](https://github.com/compujuckel/AssettoServer)**

@@ -1,8 +1,8 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace AcServerManager.Logging;
+namespace WaveServerManager.Logging;
 
 /// <summary>
 /// Minimal <see cref="ILoggerProvider"/> writing Information+ lines to the daily

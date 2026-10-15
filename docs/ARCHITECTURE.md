@@ -16,7 +16,7 @@
 | `Ini/IniDocument.cs` | Round-trip-safe INI: preserves section order, unknown keys, `;`/`#` comments, blank lines; `SetValue` rewrites only touched keys (trailing comments kept) |
 | `Services/ProfileIniMapper.cs` | Profile ⇄ `server_cfg.ini` / `entry_list.ini`; per-slot SKIN/DRIVERNAME preserved when MODEL unchanged |
 | `Services/ServerProcessManager.cs` | `Process` start/stop, stdout/stderr → SignalR group `profile-{id}`, 500-line ring buffer, optional crash auto-restart (5 s delay), kills tree on stop/dispose |
-| `Services/AcPathsService.cs` | `%AppData%\AcServerManager` (Win) / `~/.local/share/ac-server-manager` (*nix), creates `profiles/`, `logs/` |
+| `Services/AcPathsService.cs` | `%AppData%\WaveServerManager` (Win) / `~/.local/share/wave-server-manager` (*nix), creates `profiles/`, `logs/` |
 | `Services/PathGuards.cs` | Path-traversal validation helpers |
 | `Hubs/LogsHub.cs` | `JoinProfile`/`LeaveProfile` group management with Guid validation |
 | `Logging/LogFiles.cs` | Log folder paths, daily file naming, append + 7-day prune |

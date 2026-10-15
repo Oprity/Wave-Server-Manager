@@ -1,14 +1,14 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using AcServerManager.Hubs;
-using AcServerManager.Models;
+using WaveServerManager.Hubs;
+using WaveServerManager.Models;
 using Microsoft.AspNetCore.SignalR;
 
-namespace AcServerManager.Services;
+namespace WaveServerManager.Services;
 
 public sealed record ServerStatusDto(Guid ProfileId, bool IsRunning, int? Pid, DateTimeOffset? StartedAt, string? Executable);
 

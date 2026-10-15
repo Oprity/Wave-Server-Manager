@@ -1,10 +1,10 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using AcServerManager.Ini;
+using WaveServerManager.Ini;
 
-namespace AcServerManager.Tests;
+namespace WaveServerManager.Tests;
 
 public sealed class IniDocumentTests
 {

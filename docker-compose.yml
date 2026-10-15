@@ -10,7 +10,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5080
     volumes:
-      - acsm-data:/root/.local/share/ac-server-manager
+      - wave-data:/root/.local/share/wave-server-manager
 
   web:
     image: node:20-alpine
@@ -23,4 +23,4 @@ services:
       - /app/node_modules
 
 volumes:
-  acsm-data:
+  wave-data:

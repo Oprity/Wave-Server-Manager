@@ -1,11 +1,11 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using AcServerManager.Ini;
-using AcServerManager.Models;
+using WaveServerManager.Ini;
+using WaveServerManager.Models;
 
-namespace AcServerManager.Services;
+namespace WaveServerManager.Services;
 
 /// <summary>
 /// Maps <see cref="ServerProfile"/> structured fields to Assetto Corsa INI files.
@@ -86,7 +86,7 @@ public sealed class ProfileIniMapper
 
     private static IniDocument DefaultServerCfgSkeleton() => IniDocument.Parse(
         """
-        ; Assetto Corsa server_cfg.ini managed by AC Server Manager.
+        ; Assetto Corsa server_cfg.ini managed by Wave Server Manager.
         ; Unknown keys and comments are preserved on round-trip.
 
         [SERVER]

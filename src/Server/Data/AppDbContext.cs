@@ -1,11 +1,11 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using AcServerManager.Models;
+using WaveServerManager.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AcServerManager.Data;
+namespace WaveServerManager.Data;
 
 /// <summary>
 /// EF Core database context. Intentionally provider-agnostic: no SQLite/SQL Server

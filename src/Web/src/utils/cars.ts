@@ -1,4 +1,4 @@
-// AC Server Manager — AGPL-3.0-or-later (see LICENSE at repo root).
+// Wave Server Manager — AGPL-3.0-or-later (see LICENSE at repo root).
 
 /** Split a cars CSV into folder names, mirroring the backend NormalizeCars. */
 export function parseCarsCsv(csv: string): string[] {

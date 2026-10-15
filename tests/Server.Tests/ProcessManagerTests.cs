@@ -1,17 +1,17 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.Runtime.InteropServices;
-using AcServerManager.Hubs;
-using AcServerManager.Models;
-using AcServerManager.Services;
+using WaveServerManager.Hubs;
+using WaveServerManager.Models;
+using WaveServerManager.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
-namespace AcServerManager.Tests;
+namespace WaveServerManager.Tests;
 
 public sealed class ProcessManagerTests
 {
@@ -23,7 +23,7 @@ public sealed class ProcessManagerTests
         hub.Setup(h => h.Clients).Returns(clients.Object);
         clients.Setup(c => c.Group(It.IsAny<string>())).Returns(group.Object);
 
-        var tmp = Path.Combine(Path.GetTempPath(), $"acsm-test-{Guid.NewGuid():N}");
+        var tmp = Path.Combine(Path.GetTempPath(), $"wave-test-{Guid.NewGuid():N}");
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {

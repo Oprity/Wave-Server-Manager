@@ -1,11 +1,11 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using AcServerManager.Services;
+using WaveServerManager.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AcServerManager.Controllers;
+namespace WaveServerManager.Controllers;
 
 /// <summary>Local-first setup: data folders, binary detection (never bundled).</summary>
 [ApiController]

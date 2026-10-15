@@ -61,4 +61,4 @@ jobs:
       - name: Desktop smoke test (headless backend boot + shutdown)
         if: matrix.os == 'windows-latest'
         working-directory: desktop-publish
-        run: ./AcServerManager.Desktop.exe --smoke
+        run: ./WaveServerManager.Desktop.exe --smoke

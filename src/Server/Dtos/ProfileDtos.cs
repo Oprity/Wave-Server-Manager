@@ -1,11 +1,11 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace AcServerManager.Dtos;
+namespace WaveServerManager.Dtos;
 
 /// <summary>Shared validation rules for profile fields (also enforced client-side).</summary>
 public static partial class ProfileRules

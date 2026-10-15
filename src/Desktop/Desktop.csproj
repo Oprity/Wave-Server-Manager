@@ -7,8 +7,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWindowsForms>true</UseWindowsForms>
-    <RootNamespace>AcServerManager.Desktop</RootNamespace>
-    <AssemblyName>AcServerManager.Desktop</AssemblyName>
+    <RootNamespace>WaveServerManager.Desktop</RootNamespace>
+    <AssemblyName>WaveServerManager.Desktop</AssemblyName>
     <!-- Lets Linux CI agents compile this Windows-targeted project. -->
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>

@@ -1,4 +1,4 @@
-// AC Server Manager — AGPL-3.0-or-later (see LICENSE at repo root).
+// Wave Server Manager — AGPL-3.0-or-later (see LICENSE at repo root).
 
 import { describe, expect, it } from 'vitest';
 import { isValidContentName, joinCarsCsv, parseCarsCsv, validateProfileFields } from './cars';

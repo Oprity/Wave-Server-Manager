@@ -1,4 +1,4 @@
-# AC Server Manager
+# Wave Server Manager
 
 A Windows-first, **local-first, open-source** Assetto Corsa dedicated server manager.
 Create, configure, run and monitor Assetto Corsa servers from a desktop app on localhost —
@@ -33,7 +33,7 @@ per its docs). Never commit binaries, `content/`, `cars/`, `tracks/` or DLC file
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│ AcServerManager.Desktop (native window, WebView2)      │
+│ WaveServerManager.Desktop (native window, WebView2)      │
 │  free 127.0.0.1 port → in-process backend ─┐           │
 │  tray icon: Open / Quit                      │           │
 └──────────────────────────────────────────────┼──────────┘
@@ -43,7 +43,7 @@ per its docs). Never commit binaries, `content/`, `cars/`, `tracks/` or DLC file
 │ Tailwind UI (wwwroot/)  │  /api/* + /hubs    │  ProfilesController     │
 └─────────────────────────┘                    │  ServerProcessManager ──┼──► acServer/AssettoServer child process
                                                │  ProfileIniMapper ──────┼──► server_cfg.ini / entry_list.ini
-                                               │  EF Core + SQLite ──────┼──► ac-server-manager.db
+                                               │  EF Core + SQLite ──────┼──► wave-server-manager.db
                                                └─────────────────────────┘
 ```
 
@@ -85,7 +85,7 @@ cd ../..
 # Publish the desktop app as a single self-contained exe
 dotnet publish src/Desktop -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o desktop-publish
 
-./desktop-publish/AcServerManager.Desktop.exe
+./desktop-publish/WaveServerManager.Desktop.exe
 ```
 
 A native window opens with the manager UI, plus a tray icon (Open / View logs / Quit).
@@ -97,7 +97,7 @@ Logs roll daily to `%LocalAppData%\WaveServerManager\logs\wave-YYYY-MM-DD.log`
 Headless self-test (verifies backend boot + shutdown, no window):
 
 ```powershell
-./desktop-publish/AcServerManager.Desktop.exe --smoke
+./desktop-publish/WaveServerManager.Desktop.exe --smoke
 ```
 
 Useful flags: `--backend-url http://127.0.0.1:5080` (point the window at an
@@ -121,7 +121,7 @@ npm run dev
 
 ```json
 {
-  "Database": { "Provider": "Sqlite", "ConnectionString": "Data Source=ac-server-manager.db" },
+  "Database": { "Provider": "Sqlite", "ConnectionString": "Data Source=wave-server-manager.db" },
   "AcManager": {
     "DataDir": "",
     "AssettoServerExe": "C:\\Tools\\AssettoServer\\AssettoServer.exe"
@@ -129,9 +129,9 @@ npm run dev
 }
 ```
 
-- Empty `DataDir` → `%AppData%\AcServerManager` (Windows) with `profiles/` + `logs/`
+- Empty `DataDir` → `%AppData%\WaveServerManager` (Windows) with `profiles/` + `logs/`
   created automatically on startup (feature 1). Check `GET /api/setup/paths`.
-- Each profile gets `%AppData%\AcServerManager\profiles\<id>\server_cfg.ini` +
+- Each profile gets `%AppData%\WaveServerManager\profiles\<id>\server_cfg.ini` +
   `entry_list.ini`, generated from the form on server start (unknown keys/comments preserved).
 
 ### Docker (dev, backend + browser flow)

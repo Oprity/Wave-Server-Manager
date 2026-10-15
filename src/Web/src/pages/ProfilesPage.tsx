@@ -1,4 +1,4 @@
-// AC Server Manager — AGPL-3.0-or-later (see LICENSE at repo root).
+// Wave Server Manager — AGPL-3.0-or-later (see LICENSE at repo root).
 
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';

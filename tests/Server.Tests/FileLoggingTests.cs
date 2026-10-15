@@ -1,17 +1,17 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using AcServerManager.Logging;
+using WaveServerManager.Logging;
 using Microsoft.Extensions.Logging;
 
-namespace AcServerManager.Tests;
+namespace WaveServerManager.Tests;
 
 public sealed class FileLoggingTests
 {
     private static string NewTempDir()
     {
-        var dir = Path.Combine(Path.GetTempPath(), $"acsm-logtest-{Guid.NewGuid():N}");
+        var dir = Path.Combine(Path.GetTempPath(), $"wave-logtest-{Guid.NewGuid():N}");
         Directory.CreateDirectory(dir);
         return dir;
     }

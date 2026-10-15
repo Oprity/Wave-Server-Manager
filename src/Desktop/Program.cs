@@ -1,5 +1,5 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.Diagnostics;
@@ -7,11 +7,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using AcServerManager.Hosting;
-using AcServerManager.Logging;
+using WaveServerManager.Hosting;
+using WaveServerManager.Logging;
 using Photino.NET;
 
-namespace AcServerManager.Desktop;
+namespace WaveServerManager.Desktop;
 
 /// <summary>
 /// Desktop entry point: starts the ASP.NET Core backend in-process on a free
@@ -32,8 +32,8 @@ internal static class Program
             if (OperatingSystem.IsWindows())
             {
                 MessageBox.Show(
-                    $"AC Server Manager crashed:\n\n{e.ExceptionObject}",
-                    "AC Server Manager",
+                    $"Wave Server Manager crashed:\n\n{e.ExceptionObject}",
+                    "Wave Server Manager",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -77,7 +77,7 @@ internal static class Program
 /// <summary>Orchestrates backend lifetime + native window.</summary>
 internal static class DesktopRunner
 {
-    private const string AppTitleConst = "AC Server Manager";
+    private const string AppTitleConst = "Wave Server Manager";
 
     public static int Run(string? backendUrlOverride)
     {

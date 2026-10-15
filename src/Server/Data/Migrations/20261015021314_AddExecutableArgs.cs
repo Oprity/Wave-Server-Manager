@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AcServerManager.Data.Migrations
+namespace WaveServerManager.Data.Migrations
 {
     /// <inheritdoc />
     public partial class AddExecutableArgs : Migration

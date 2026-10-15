@@ -1,14 +1,14 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using AcServerManager.Data;
-using AcServerManager.Hubs;
-using AcServerManager.Logging;
-using AcServerManager.Services;
+using WaveServerManager.Data;
+using WaveServerManager.Hubs;
+using WaveServerManager.Logging;
+using WaveServerManager.Services;
 using Microsoft.EntityFrameworkCore;
 
-namespace AcServerManager.Hosting;
+namespace WaveServerManager.Hosting;
 
 /// <summary>
 /// Builds the ASP.NET Core backend application. Used both by the standalone
@@ -41,7 +41,7 @@ public static class AppHost
         builder.Logging.AddAppFileLogging();
 
         var app = builder.Build();
-        app.Logger.LogInformation("AC Server Manager backend initialized.");
+        app.Logger.LogInformation("Wave Server Manager backend initialized.");
 
         // Ensure local-first folders exist (Milestone 1, feature 1).
         app.Services.GetRequiredService<AcPathsService>().EnsureCreated();

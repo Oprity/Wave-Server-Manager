@@ -1,13 +1,13 @@
-// AC Server Manager — https://github.com/ (see README)
-// Copyright (C) 2026 AC Server Manager contributors
+// Wave Server Manager — https://github.com/ (see README)
+// Copyright (C) 2026 Wave Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace AcServerManager.Services;
+namespace WaveServerManager.Services;
 
 /// <summary>
 /// Resolves and creates the app's on-disk folders (Milestone 1, feature 1:
 /// "create an Assetto Corsa folder for the user somewhere clear and safe").
-/// Windows: %AppData%\AcServerManager · Linux/macOS: ~/.local/share/ac-server-manager.
+/// Windows: %AppData%\WaveServerManager · Linux/macOS: ~/.local/share/wave-server-manager.
 /// Overridable via appsettings <c>AcManager:DataDir</c>.
 /// </summary>
 public sealed class AcPathsService
@@ -29,11 +29,11 @@ public sealed class AcPathsService
         if (OperatingSystem.IsWindows())
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            return Path.Combine(appData, "AcServerManager");
+            return Path.Combine(appData, "WaveServerManager");
         }
 
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        return Path.Combine(home, ".local", "share", "ac-server-manager");
+        return Path.Combine(home, ".local", "share", "wave-server-manager");
     }
 
     /// <summary>Creates all folders (idempotent). Called at startup.</summary>

@@ -236,7 +236,7 @@ public sealed class ServerProcessManager : IServerProcessManager, IDisposable
             throw new InvalidOperationException(
                 "No server executable configured. Set AcManager:AssettoServerExe in appsettings.json " +
                 "or per-profile ExecutablePath. The app never bundles binaries — install AssettoServer " +
-                "0.54 yourself (see README).");
+                "from compujuckel/AssettoServer releases yourself (see README).");
         }
 
         // Bare command names (no directory) resolve via PATH, e.g. "ping" in tests.

@@ -15,8 +15,9 @@ Photino.NET (WebView2) window, with a system-tray icon for Open / Quit.
 
 ## Upstream credits
 
-- **[AssettoServer](https://github.com/assetto-server/assetto) (AGPL-3.0 fork of the AC server ecosystem)**
-  — this manager shells out to AssettoServer **0.54** (or stock `acServer.exe`); it does
+- **[AssettoServer](https://github.com/compujuckel/AssettoServer) by compujuckel
+  (AGPL-3.0, the original custom AC server)** — this manager shells out to
+  AssettoServer (currently the **v0.0.55** pre-release line, or stock `acServer.exe`); it does
   **not** bundle, copy or redistribute any server binaries or Kunos/game content.
 - Original game + server protocol by **Kunos Simulazioni**.
 - [Photino.NET](https://github.com/tryphotino/photino.NET) (Apache-2.0) for the native window.
@@ -24,8 +25,9 @@ Photino.NET (WebView2) window, with a system-tray icon for Open / Quit.
   licenses in each package registry).
 
 **Content policy:** the app *detects or downloads* the server binary on the user's own
-machine (point `AcManager:AssettoServerExe` at it, or install AssettoServer 0.54 per its
-docs). Never commit binaries, `content/`, `cars/`, `tracks/` or DLC files to this repo.
+machine (point `AcManager:AssettoServerExe` at it, or install AssettoServer from the
+[compujuckel/AssettoServer releases](https://github.com/compujuckel/AssettoServer/releases)
+per its docs). Never commit binaries, `content/`, `cars/`, `tracks/` or DLC files to this repo.
 
 ## Architecture
 
@@ -65,9 +67,11 @@ docs). Never commit binaries, `content/`, `cars/`, `tracks/` or DLC files to thi
 - [WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/) (preinstalled on Windows 11)
 - [.NET 10 SDK](https://dotnet.microsoft.com/download) (latest LTS) — to build
 - [Node.js 20+](https://nodejs.org/) + npm — to build the UI
-- AssettoServer **0.54** (or stock AC server) installed **by you** — download from
-  [AssettoServer releases](https://github.com/assetto-server/assetto/releases),
-  never from this repo.
+- AssettoServer installed **by you** (or stock AC server) — grab the newest
+  `assetto-server-win-x64.zip` from
+  [compujuckel/AssettoServer releases](https://github.com/compujuckel/AssettoServer/releases),
+  extract it, and point `AcManager:AssettoServerExe` at the server executable.
+  Never from this repo.
 
 ### Run — desktop app (normal use)
 
@@ -170,4 +174,4 @@ Ubuntu + Windows, plus publishes the desktop single-exe and runs `--smoke` on Wi
 - **Desktop (done):** Photino.NET native window, free-port in-process backend, tray
   Open/Quit, clean shutdown, `--smoke` self-test.
 - **Next:** content scanning (cars/skins/tracks dropdowns), INI import/preview
-  diff, results viewer, Discord webhook, AssettoServer 0.54 downloader, installer.
+  diff, results viewer, Discord webhook, AssettoServer release downloader, installer.

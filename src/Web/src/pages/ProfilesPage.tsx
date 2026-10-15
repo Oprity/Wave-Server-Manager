@@ -86,7 +86,11 @@ export default function ProfilesPage() {
     <div className="space-y-4">
       {setup && !setup.assettoServerExists && (
         <div className="rounded border border-amber-700 bg-amber-950 px-4 py-3 text-sm text-amber-200">
-          No AssettoServer binary detected. Install AssettoServer 0.54 yourself and set{' '}
+          No AssettoServer binary detected. Install AssettoServer (v0.0.55 pre-release) from{' '}
+          <a className="underline" href="https://github.com/compujuckel/AssettoServer/releases" target="_blank" rel="noreferrer">
+            compujuckel/AssettoServer releases
+          </a>{' '}
+          and set{' '}
           <code className="font-mono">AcManager:AssettoServerExe</code> in appsettings.json (see README).
           Data folder: <code className="font-mono">{setup.dataDir}</code>
         </div>

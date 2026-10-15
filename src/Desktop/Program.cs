@@ -2,11 +2,13 @@
 // Copyright (C) 2026 AC Server Manager contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using AcServerManager.Hosting;
+using AcServerManager.Logging;
 using Photino.NET;
 
 namespace AcServerManager.Desktop;
@@ -14,23 +16,49 @@ namespace AcServerManager.Desktop;
 /// <summary>
 /// Desktop entry point: starts the ASP.NET Core backend in-process on a free
 /// localhost port, shows it in a native Photino.NET (WebView2) window, and owns
-/// a system-tray icon with Open / Quit. Closing the window shuts everything down.
-/// Everything runs on the STA main thread (required by WinForms and WebView2);
-/// async backend calls are blocked on (GetResult) so continuations never migrate
-/// the window off this thread.
+/// a system-tray icon with Open / View logs / Quit. Closing the window shuts
+/// everything down. Everything runs on the STA main thread (required by WinForms
+/// and WebView2); async backend calls are blocked on (GetResult) so continuations
+/// never migrate the window off this thread.
 /// </summary>
 internal static class Program
 {
     [STAThread]
     private static int Main(string[] args)
     {
-        if (args.Any(a => string.Equals(a, "--smoke", StringComparison.OrdinalIgnoreCase)))
+        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
         {
-            return SmokeSelfTest.Run();
-        }
+            LogFiles.AppendLine($"FATAL unhandled exception: {e.ExceptionObject}");
+            if (OperatingSystem.IsWindows())
+            {
+                MessageBox.Show(
+                    $"AC Server Manager crashed:\n\n{e.ExceptionObject}",
+                    "AC Server Manager",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        };
+        TaskScheduler.UnobservedTaskException += (_, e) =>
+        {
+            LogFiles.AppendLine($"Unobserved task exception: {e.Exception}");
+            e.SetObserved();
+        };
 
-        var backendUrl = GetArgValue(args, "--backend-url");
-        return DesktopRunner.Run(backendUrl);
+        try
+        {
+            if (args.Any(a => string.Equals(a, "--smoke", StringComparison.OrdinalIgnoreCase)))
+            {
+                return SmokeSelfTest.Run();
+            }
+
+            var backendUrl = GetArgValue(args, "--backend-url");
+            return DesktopRunner.Run(backendUrl);
+        }
+        catch (Exception ex)
+        {
+            LogFiles.AppendLine($"FATAL startup failure: {ex}");
+            return 1;
+        }
     }
 
     internal static string? GetArgValue(string[] args, string name)
@@ -46,13 +74,18 @@ internal static class Program
     }
 }
 
-/// <summary>Orchestrates backend lifetime + native window. No WinForms types here
-/// except the OK-only error dialog, so --smoke stays headless-capable.</summary>
+/// <summary>Orchestrates backend lifetime + native window.</summary>
 internal static class DesktopRunner
 {
+    private const string AppTitleConst = "AC Server Manager";
+
     public static int Run(string? backendUrlOverride)
     {
+        LogFiles.PruneOldFiles();
+        LogFiles.AppendLine("Desktop starting.");
+
         var url = backendUrlOverride ?? $"http://127.0.0.1:{FindFreePort()}";
+        LogFiles.AppendLine($"Starting backend at {url}.");
 
         var app = AppHost.Create(["--urls", url]);
         try
@@ -61,15 +94,17 @@ internal static class DesktopRunner
 
             if (!WaitForHealth(url, TimeSpan.FromSeconds(30)))
             {
-                ShowError($"The local server did not start in time.\n\nURL: {url}");
+                LogFiles.AppendLine($"Backend at {url} never became healthy; exiting.");
+                ShowError($"The local server did not start in time.\n\nURL: {url}\n\nSee the log folder:\n{LogFiles.DefaultDirectory}");
                 app.StopAsync().GetAwaiter().GetResult();
                 return 1;
             }
 
+            LogFiles.AppendLine($"Backend healthy at {url}; opening window.");
             Application.EnableVisualStyles();
 
             PhotinoWindow? window = null;
-            using var tray = new TrayMenu(AppTitleConst, OnOpen, OnQuit);
+            using var tray = new TrayMenu(AppTitleConst, OnOpen, OnViewLogs, OnQuit);
             window = new PhotinoWindow()
                 .SetTitle(AppTitleConst)
                 .SetUseOsDefaultSize(false)
@@ -83,6 +118,7 @@ internal static class DesktopRunner
             // Blocks on the native message loop (which also pumps tray messages).
             // Closing the window returns here, then we shut the backend down.
             window.WaitForClose();
+            LogFiles.AppendLine("Window closed; stopping backend.");
             return 0;
 
             void OnOpen()
@@ -101,16 +137,17 @@ internal static class DesktopRunner
                 });
             }
 
+            void OnViewLogs() => OpenLogsFolder();
+
             void OnQuit() => window?.Close();
         }
         finally
         {
             app.StopAsync().GetAwaiter().GetResult();
             app.DisposeAsync().GetAwaiter().GetResult();
+            LogFiles.AppendLine("Backend stopped; exiting.");
         }
     }
-
-    private const string AppTitleConst = "AC Server Manager";
 
     internal static int FindFreePort()
     {
@@ -142,6 +179,13 @@ internal static class DesktopRunner
         return false;
     }
 
+    internal static void OpenLogsFolder()
+    {
+        var dir = LogFiles.DefaultDirectory;
+        Directory.CreateDirectory(dir);
+        Process.Start(new ProcessStartInfo { FileName = dir, UseShellExecute = true });
+    }
+
     private static void ShowError(string message) =>
         MessageBox.Show(message, AppTitleConst, MessageBoxButtons.OK, MessageBoxIcon.Error);
 }
@@ -162,8 +206,11 @@ internal static class SmokeSelfTest
             AllocConsole();
         }
 
+        LogFiles.PruneOldFiles();
         var url = $"http://127.0.0.1:{DesktopRunner.FindFreePort()}";
-        Console.WriteLine($"[smoke] starting backend at {url}");
+        var line = $"[smoke] starting backend at {url}";
+        Console.WriteLine(line);
+        LogFiles.AppendLine(line);
         try
         {
             using var app = AppHost.Create(["--urls", url]);
@@ -173,9 +220,11 @@ internal static class SmokeSelfTest
                 if (!DesktopRunner.WaitForHealth(url, TimeSpan.FromSeconds(30)))
                 {
                     Console.WriteLine("[smoke] FAIL: backend never became healthy");
+                    LogFiles.AppendLine("[smoke] FAIL: backend never became healthy");
                     return 1;
                 }
                 Console.WriteLine("[smoke] OK: backend healthy, shutting down");
+                LogFiles.AppendLine("[smoke] OK: backend healthy, shutting down");
                 return 0;
             }
             finally
@@ -186,6 +235,7 @@ internal static class SmokeSelfTest
         catch (Exception ex)
         {
             Console.WriteLine($"[smoke] FAIL: {ex.GetType().Name}: {ex.Message}");
+            LogFiles.AppendLine($"[smoke] FAIL: {ex}");
             return 1;
         }
     }

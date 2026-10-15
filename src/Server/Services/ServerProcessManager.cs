@@ -157,6 +157,7 @@ public sealed class ServerProcessManager : IServerProcessManager, IDisposable
         }
 
         await EmitAsync(profileId, "--- stopped ---").ConfigureAwait(false);
+        _log.LogInformation("Stopped server process for profile {ProfileId}", profileId);
     }
 
     private void OnLine(Guid profileId, string? line)

@@ -19,6 +19,8 @@
 | `Services/AcPathsService.cs` | `%AppData%\AcServerManager` (Win) / `~/.local/share/ac-server-manager` (*nix), creates `profiles/`, `logs/` |
 | `Services/PathGuards.cs` | Path-traversal validation helpers |
 | `Hubs/LogsHub.cs` | `JoinProfile`/`LeaveProfile` group management with Guid validation |
+| `Logging/LogFiles.cs` | Log folder paths, daily file naming, append + 7-day prune |
+| `Logging/FileLoggerProvider.cs` | Tiny Information+ file sink registered in `AppHost` |
 
 ## Desktop host — `src/Desktop` (Photino.NET 4 + WinForms tray)
 
@@ -26,7 +28,7 @@
 |---|---|
 | `Program.cs` | `[STAThread]` entry; `--smoke` self-test vs `DesktopRunner.Run`; `--backend-url` parsing |
 | `Program.cs` → `DesktopRunner` | Free-port pick → `AppHost.Create(["--urls", url])` → `StartAsync` → `/healthz` poll → Photino window (`Load(url)` + `WaitForClose`) → `StopAsync` on close |
-| `TrayMenu.cs` | WinForms `NotifyIcon` (Open / Quit / double-click), isolated so `--smoke` never loads WinForms |
+| `TrayMenu.cs` | WinForms `NotifyIcon` (Open / View logs / Quit, double-click), isolated so `--smoke` never loads WinForms |
 
 Startup sequence: free `127.0.0.1` port → backend `StartAsync` (migrations run) →
 health poll → tray + window → `WaitForClose()` (also pumps tray messages) →

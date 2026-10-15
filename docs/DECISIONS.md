@@ -55,3 +55,14 @@
 17. **CI builds Desktop on both OSes** (`EnableWindowsTargeting`) but publishes +
     `--smoke` on Windows only (needs the WindowsDesktop runtime + WebView2 adjacency).
     `wwwroot/` is mirrored into Desktop publish output via a linked Content item.
+
+## File logging — 2026-10-15
+
+18. **Rolling daily logs, no external sink package.** `Logging/LogFiles` owns the path
+    (`%LocalAppData%\WaveServerManager\logs\wave-YYYY-MM-DD.log`, pruned to 7 days by
+    last-write time); `Logging/FileLoggerProvider` is a ~50-line `ILoggerProvider`
+    (Information+) registered in `AppHost`, so backend lifetime + process start/stop
+    lines land in the file even though WinExe has no console. The desktop host logs
+    startup, backend readiness and shutdown to the same file, plus `AppDomain` /
+    `UnobservedTask` handlers for crashes. Tray **View logs** opens the folder via
+    `UseShellExecute`. Covered by `FileLoggingTests` (naming, append, prune, levels).

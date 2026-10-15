@@ -4,6 +4,7 @@
 
 using AcServerManager.Data;
 using AcServerManager.Hubs;
+using AcServerManager.Logging;
 using AcServerManager.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,7 +37,11 @@ public static class AppHost
             .AllowAnyMethod()
             .AllowCredentials()));
 
+        // Daily rolling file log next to console logging (desktop has no console).
+        builder.Logging.AddAppFileLogging();
+
         var app = builder.Build();
+        app.Logger.LogInformation("AC Server Manager backend initialized.");
 
         // Ensure local-first folders exist (Milestone 1, feature 1).
         app.Services.GetRequiredService<AcPathsService>().EnsureCreated();

@@ -8,18 +8,19 @@ using System.Windows.Forms;
 namespace AcServerManager.Desktop;
 
 /// <summary>
-/// Windows system-tray icon with Open / Quit. Kept in its own type so the
-/// headless <c>--smoke</c> path never loads WinForms assemblies.
+/// Windows system-tray icon with Open / View logs / Quit. Kept in its own type
+/// so the headless <c>--smoke</c> path never loads WinForms assemblies.
 /// </summary>
 internal sealed class TrayMenu : IDisposable
 {
     private readonly NotifyIcon _icon;
     private bool _disposed;
 
-    public TrayMenu(string title, Action onOpen, Action onQuit)
+    public TrayMenu(string title, Action onOpen, Action onViewLogs, Action onQuit)
     {
         var menu = new ContextMenuStrip();
         menu.Items.Add(new ToolStripMenuItem("Open", null, (_, _) => onOpen()));
+        menu.Items.Add(new ToolStripMenuItem("View logs", null, (_, _) => onViewLogs()));
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add(new ToolStripMenuItem("Quit", null, (_, _) => onQuit()));
 

@@ -21,7 +21,10 @@ public static class AppHost
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddControllers();
+        // Explicit part: when hosted from the single-file desktop exe, the entry
+        // assembly is the Desktop host, so the Server controllers must be added
+        // by hand (single-file publish breaks automatic referenced-assembly scan).
+        builder.Services.AddControllers().AddApplicationPart(typeof(AppHost).Assembly);
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddSignalR();

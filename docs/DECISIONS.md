@@ -67,6 +67,19 @@
     `UnobservedTask` handlers for crashes. Tray **View logs** opens the folder via
     `UseShellExecute`. Covered by `FileLoggingTests` (naming, append, prune, levels).
 
+## Upstream AssettoServer — 2026-10-15
+
+19. **Real upstream is [compujuckel/AssettoServer](https://github.com/compujuckel/AssettoServer)**
+    (original, AGPL-3.0 — not the `assetto-server/assetto` fork previously credited).
+    Release line is **v0.0.55 pre-releases** with per-OS assets
+    (`assetto-server-win-x64.zip` for Windows). All docs, UI text and error messages
+    now point there. Follow-up: in-app downloader that fetches + extracts the Windows
+    asset into the user's data dir and fills in `AssettoServerExe` automatically.
+    Verified live: v0.0.55-pre44 boots from manager-generated INI files
+    ("Loaded 2 cars"); it then needs the user's AC game content, which only the
+    user can provide. Note it logs `cfg\server_cfg.ini` — content-path wiring is
+    M2 content-scanning work.
+
 ## Rename to Wave Server Manager — 2026-10-15
 
 20. **Product is "Wave Server Manager"** (matches the GitHub repo name). Namespaces,
@@ -77,11 +90,9 @@
     folders are organizational, and stable paths keep CI/Docker/scripts untouched.
     Solution file is the new SDK-default `.slnx` format (created by .NET 10 CLI).
 
-## Upstream AssettoServer — 2026-10-15
+## Single-file controller discovery — 2026-10-15
 
-19. **Real upstream is [compujuckel/AssettoServer](https://github.com/compujuckel/AssettoServer)**
-    (original, AGPL-3.0 — not the `assetto-server/assetto` fork previously credited).
-    Release line is **v0.0.55 pre-releases** with per-OS assets
-    (`assetto-server-win-x64.zip` for Windows). All docs, UI text and error messages
-    now point there. Follow-up: in-app downloader that fetches + extracts the Windows
-    asset into the user's data dir and fills in `AssettoServerExe` automatically.
+21. **The desktop single exe needs `AddApplicationPart`.** With the Desktop host as
+    entry assembly, single-file publish breaks automatic referenced-assembly
+    controller scanning (`/healthz` worked, every `/api/*` fell through to the SPA).
+    `AppHost` now registers the Server assembly explicitly; harmless standalone.

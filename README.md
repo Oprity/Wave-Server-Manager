@@ -91,6 +91,9 @@ dotnet publish src/Desktop -c Release -r win-x64 --self-contained -p:PublishSing
 A native window opens with the manager UI, plus a tray icon (Open / View logs / Quit).
 Closing the window stops the backend and quits everything.
 
+Easiest on Windows: double-click **`start.bat`** in the repo root — it checks
+prerequisites, rebuilds the UI and the exe only when sources changed, then launches.
+
 Logs roll daily to `%LocalAppData%\WaveServerManager\logs\wave-YYYY-MM-DD.log`
 (kept 7 days) — open the folder any time from the tray's **View logs** item.
 

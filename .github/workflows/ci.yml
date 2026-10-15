@@ -29,7 +29,7 @@ jobs:
       - name: Restore backend
         run: dotnet restore
 
-      - name: Build backend
+      - name: Build all (backend + desktop)
         run: dotnet build --no-restore -c Release
 
       - name: Backend tests
@@ -51,5 +51,14 @@ jobs:
         working-directory: src/Web
         run: npm run build:server
 
-      - name: Publish single executable
+      - name: Publish backend single executable
         run: dotnet publish src/Server -c Release -o publish
+
+      - name: Publish desktop single executable (win-x64)
+        if: matrix.os == 'windows-latest'
+        run: dotnet publish src/Desktop -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o desktop-publish
+
+      - name: Desktop smoke test (headless backend boot + shutdown)
+        if: matrix.os == 'windows-latest'
+        working-directory: desktop-publish
+        run: ./AcServerManager.Desktop.exe --smoke

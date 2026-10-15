@@ -1,10 +1,11 @@
-# Architecture (Milestone 1)
+# Architecture (Milestone 1 + desktop shell)
 
 ## Backend — `src/Server` (ASP.NET Core, .NET 8)
 
 | File | Role |
 |---|---|
-| `Program.cs` | DI wiring, EF `Migrate()` on startup (or `EnsureCreated` for non-relational test provider), static-file serving of `wwwroot/`, `MapHub<LogsHub>`, `/healthz` |
+| `Program.cs` | Thin entry point (`AppHost.Create(args)` + `Run`); `Program` class retained for tests |
+| `Hosting/AppHost.cs` | Builds the full backend app; shared by the standalone exe and the desktop host |
 | `Models/ServerProfile.cs` | Profile entity; `CarsCsv` stored as one string to stay provider-agnostic |
 | `Data/AppDbContext.cs` | `DbSet<Profiles>` + fluent config; **no provider specifics** |
 | `Data/DatabaseServiceExtensions.cs` | **Only file that names SQLite.** `sqlserver` branch throws `NotSupportedException` with instructions — the SQL-Server extension point |
@@ -18,6 +19,20 @@
 | `Services/AcPathsService.cs` | `%AppData%\AcServerManager` (Win) / `~/.local/share/ac-server-manager` (*nix), creates `profiles/`, `logs/` |
 | `Services/PathGuards.cs` | Path-traversal validation helpers |
 | `Hubs/LogsHub.cs` | `JoinProfile`/`LeaveProfile` group management with Guid validation |
+
+## Desktop host — `src/Desktop` (Photino.NET 4 + WinForms tray)
+
+| File | Role |
+|---|---|
+| `Program.cs` | `[STAThread]` entry; `--smoke` self-test vs `DesktopRunner.Run`; `--backend-url` parsing |
+| `Program.cs` → `DesktopRunner` | Free-port pick → `AppHost.Create(["--urls", url])` → `StartAsync` → `/healthz` poll → Photino window (`Load(url)` + `WaitForClose`) → `StopAsync` on close |
+| `TrayMenu.cs` | WinForms `NotifyIcon` (Open / Quit / double-click), isolated so `--smoke` never loads WinForms |
+
+Startup sequence: free `127.0.0.1` port → backend `StartAsync` (migrations run) →
+health poll → tray + window → `WaitForClose()` (also pumps tray messages) →
+`StopAsync` + dispose. Quit menu calls `window.Close()`; Open foregrounds via
+momentary `SetTopMost`. Publish: self-contained win-x64 single exe; `wwwroot/`
+mirrored via linked Content item.
 
 ## Frontend — `src/Web` (React + Vite + Tailwind)
 

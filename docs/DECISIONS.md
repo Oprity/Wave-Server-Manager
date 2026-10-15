@@ -27,3 +27,29 @@
    OS-agnostic; the process test picks `ping.exe` vs `/bin/sleep` by OS.
 10. **Track/cars are free-text inputs in M1** with folder-name validation; real dropdowns
     wait for M2 content scanning.
+
+## Desktop shell — 2026-10-15
+
+11. **Photino.NET 4.0.16 for the native window.** Targets `net8.0` (matches the backend);
+    API verified by reflection + a compile probe (`new PhotinoWindow()`, fluent setters,
+    `Load(url)`, `WaitForClose()`). WebView2 fallback was not needed. WebView2 Runtime
+    is a prerequisite but ships with Windows 11.
+12. **Backend extracted to `AppHost.Create`, behavior unchanged.** `Program.cs` is now
+    three lines; the desktop host starts the same app in-process. `WebApplicationFactory<Program>`
+    tests keep working.
+13. **Free loopback port per launch** (`TcpListener(Loopback, 0)`), passed via `--urls`;
+    `--backend-url` override points the window at an existing backend for dev.
+    Readiness is polled on `/healthz` (30 s); failure shows a WinForms error dialog.
+14. **Tray = WinForms NotifyIcon** (Photino v4 has no tray/Show/Hide API):
+    Open foregrounds via momentary `SetTopMost`, Quit calls `window.Close()`,
+    double-click = Open. Closing the window always stops the backend (`StopAsync`) —
+    no minimize-to-tray, by request ("shut everything down cleanly on close").
+15. **STA main thread, blocking waits.** `Main` is synchronous; async backend calls use
+    `GetAwaiter().GetResult()` so the Photino/WebView2 window never migrates off the
+    STA thread. Tray types live in `TrayMenu` so `--smoke` never loads WinForms.
+16. **No custom icons yet** (`SystemIcons.Application` for the tray, OS default window
+    icon). Backend console logs are unavailable in WinExe mode — future work: file sink
+    + "View logs" tray item.
+17. **CI builds Desktop on both OSes** (`EnableWindowsTargeting`) but publishes +
+    `--smoke` on Windows only (needs the WindowsDesktop runtime + WebView2 adjacency).
+    `wwwroot/` is mirrored into Desktop publish output via a linked Content item.

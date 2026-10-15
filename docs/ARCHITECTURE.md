@@ -18,6 +18,8 @@
 | `Services/ServerProcessManager.cs` | `Process` start/stop, stdout/stderr → SignalR group `profile-{id}`, 500-line ring buffer, optional crash auto-restart (5 s delay), kills tree on stop/dispose |
 | `Services/AcPathsService.cs` | `%AppData%\WaveServerManager` (Win) / `~/.local/share/wave-server-manager` (*nix), creates `profiles/`, `logs/` |
 | `Services/PathGuards.cs` | Path-traversal validation helpers |
+| `Services/ContentPathsService.cs` | Manual override (`content.json`) layered over Steam auto-detection |
+| `Services/SteamContentLocator.cs` | Registry + well-known Steam paths, `libraryfolders.vdf` parse, AC folder check |
 | `Hubs/LogsHub.cs` | `JoinProfile`/`LeaveProfile` group management with Guid validation |
 | `Logging/LogFiles.cs` | Log folder paths, daily file naming, append + 7-day prune |
 | `Logging/FileLoggerProvider.cs` | Tiny Information+ file sink registered in `AppHost` |

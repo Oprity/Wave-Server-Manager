@@ -37,3 +37,14 @@ export interface SetupInfo {
   assettoServerExe: string;
   assettoServerExists: boolean;
 }
+
+export interface ContentStatus {
+  steamInstalls: string[];
+  libraries: string[];
+  autoDetectedPath?: string | null;
+  manualPath?: string | null;
+  effectivePath?: string | null;
+  found: boolean;
+  steamInstallUrl: string;
+  steamStoreUrl: string;
+}

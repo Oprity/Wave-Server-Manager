@@ -118,7 +118,21 @@ npm install
 npm run dev
 ```
 
-### Configure
+### Game content (Assetto Corsa files)
+
+On first launch the app opens a **setup screen** if your Assetto Corsa installation
+isn't found. It scans all Steam installs on the machine (registry + well-known
+paths, every folder in `steamapps/libraryfolders.vdf`, appid 244210) and offers:
+
+- **Install via Steam** — opens the Steam client's install dialog (`steam://install/244210`),
+- **Open store page** — if you don't own the game yet,
+- **Set the folder manually** — paste your `assettocorsa` folder path (validated server-side),
+- **Continue without it** — profiles still work, servers just can't start.
+
+You can re-run detection any time from **Setup** in the header. A manual override is
+stored in `%AppData%\WaveServerManager\content.json` ("Back to auto-detect" clears it).
+
+### Configure (server binary)
 
 `src/Server/appsettings.json` (shipped next to the exe on publish):
 

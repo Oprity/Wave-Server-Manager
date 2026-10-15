@@ -1,6 +1,6 @@
 // Wave Server Manager — AGPL-3.0-or-later (see LICENSE at repo root).
 
-import type { ServerProfile, ServerStatus, SetupInfo } from '../types';
+import type { ContentStatus, ServerProfile, ServerStatus, SetupInfo } from '../types';
 
 async function req<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(path, {
@@ -38,4 +38,8 @@ export const api = {
   stop: (id: string) => req<ServerStatus>(`/api/profiles/${id}/stop`, { method: 'POST' }),
   restart: (id: string) => req<ServerStatus>(`/api/profiles/${id}/restart`, { method: 'POST' }),
   setup: () => req<SetupInfo>('/api/setup/paths'),
+  getContent: () => req<ContentStatus>('/api/setup/content'),
+  setContentPath: (path: string) =>
+    req<ContentStatus>('/api/setup/content', { method: 'POST', body: JSON.stringify({ path }) }),
+  clearContentPath: () => req<ContentStatus>('/api/setup/content', { method: 'DELETE' }),
 };

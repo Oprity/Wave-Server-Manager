@@ -96,3 +96,16 @@
     entry assembly, single-file publish breaks automatic referenced-assembly
     controller scanning (`/healthz` worked, every `/api/*` fell through to the SPA).
     `AppHost` now registers the Server assembly explicitly; harmless standalone.
+
+## Steam game detection — 2026-10-15
+
+22. **Find every Steam install, or show the setup screen.** `SteamContentLocator`
+    reads the registry + default paths, parses new- and legacy-format
+    `libraryfolders.vdf`, and accepts a folder with `AssettoCorsa.exe`/`content/`
+    (appid 244210). `ContentPathsService` layers a validated manual override
+    (`content.json`) over auto-detection; stale overrides are ignored.
+    `GET/POST/DELETE /api/setup/content` backs a first-run setup screen
+    (install via `steam://install/244210`, store link, manual path, skip) plus a
+    permanent Setup page and a profiles banner. A browser can't return a folder
+    path, so manual entry is a validated text field. Covered by
+    `ContentDetectionTests` against fake Steam roots.

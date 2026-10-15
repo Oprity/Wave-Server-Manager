@@ -25,12 +25,14 @@ public static class AppHost
         // assembly is the Desktop host, so the Server controllers must be added
         // by hand (single-file publish breaks automatic referenced-assembly scan).
         builder.Services.AddControllers().AddApplicationPart(typeof(AppHost).Assembly);
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddSignalR();
 
         builder.Services.AddAppDatabase(builder.Configuration);
         builder.Services.AddSingleton<AcPathsService>();
+        builder.Services.AddSingleton<ContentPathsService>();
         builder.Services.AddSingleton<ProfileIniMapper>();
         builder.Services.AddSingleton<IServerProcessManager, ServerProcessManager>();
 

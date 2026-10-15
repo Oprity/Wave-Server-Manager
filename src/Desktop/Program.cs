@@ -87,7 +87,9 @@ internal static class DesktopRunner
         var url = backendUrlOverride ?? $"http://127.0.0.1:{FindFreePort()}";
         LogFiles.AppendLine($"Starting backend at {url}.");
 
-        var app = AppHost.Create(["--urls", url]);
+        // Pin the content root to the exe folder: appsettings.json and wwwroot
+        // live next to the executable, independent of the working directory.
+        var app = AppHost.Create(["--urls", url], AppContext.BaseDirectory);
         try
         {
             app.StartAsync().GetAwaiter().GetResult();

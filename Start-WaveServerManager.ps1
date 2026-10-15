@@ -8,7 +8,8 @@
 .DESCRIPTION
   Checks prerequisites (.NET 10 SDK, Node 20+), rebuilds the web UI when sources
   are newer than the staged output, publishes the desktop app when needed, then
-  launches it. Pass -Smoke to run the headless self-test instead of the window.
+  launches it from its own folder. Pass -Smoke to run the headless self-test
+  instead of the window.
 #>
 param(
   [switch]$Smoke
@@ -18,7 +19,8 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $webDir = Join-Path $root 'src/Web'
 $wwwroot = Join-Path $root 'src/Server/wwwroot/index.html'
-$exe = Join-Path $root 'desktop-publish/WaveServerManager.Desktop.exe'
+$publishDir = Join-Path $root 'desktop-publish'
+$exe = Join-Path $publishDir 'WaveServerManager.Desktop.exe'
 
 function Test-Command($name) {
   return $null -ne (Get-Command $name -ErrorAction SilentlyContinue)
@@ -74,7 +76,7 @@ if ($exeStale) {
   Write-Host 'Publishing desktop app (first run takes a while)...'
   & dotnet publish (Join-Path $root 'src/Desktop') -c Release -r win-x64 --self-contained `
     -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `
-    -o (Join-Path $root 'desktop-publish')
+    -o $publishDir
   if ($LASTEXITCODE -ne 0) { throw 'Desktop publish failed.' }
 }
 else {
@@ -84,11 +86,13 @@ else {
 # --- launch -------------------------------------------------------------------
 # NOTE: the desktop app is a WinExe (no console), so `&` would not wait for it.
 # Start-Process -Wait is required to observe the smoke-test exit code.
+# The working directory is set to the publish folder; the app also pins its
+# content root to the exe folder, so config + UI resolve from anywhere.
 if ($Smoke) {
   Write-Host 'Running headless self-test...'
-  $proc = Start-Process -FilePath $exe -ArgumentList '--smoke' -Wait -PassThru
+  $proc = Start-Process -FilePath $exe -ArgumentList '--smoke' -WorkingDirectory $publishDir -Wait -PassThru
   exit $proc.ExitCode
 }
 
 Write-Host 'Starting Wave Server Manager...'
-Start-Process -FilePath $exe
+Start-Process -FilePath $exe -WorkingDirectory $publishDir

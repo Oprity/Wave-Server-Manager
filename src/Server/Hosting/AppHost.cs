@@ -17,9 +17,19 @@ namespace WaveServerManager.Hosting;
 /// </summary>
 public static class AppHost
 {
-    public static WebApplication Create(string[] args)
+    /// <param name="contentRootPath">
+    /// Optional content root. The desktop host pins this to its own folder so a
+    /// double-click launch works no matter the working directory; otherwise the
+    /// current directory is used (normal `dotnet run` behavior).
+    /// </param>
+    public static WebApplication Create(string[] args, string? contentRootPath = null)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        var options = new WebApplicationOptions
+        {
+            Args = args,
+            ContentRootPath = contentRootPath ?? Directory.GetCurrentDirectory(),
+        };
+        var builder = WebApplication.CreateBuilder(options);
 
         // Explicit part: when hosted from the single-file desktop exe, the entry
         // assembly is the Desktop host, so the Server controllers must be added

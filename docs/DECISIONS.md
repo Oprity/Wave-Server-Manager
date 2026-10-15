@@ -97,6 +97,15 @@
     controller scanning (`/healthz` worked, every `/api/*` fell through to the SPA).
     `AppHost` now registers the Server assembly explicitly; harmless standalone.
 
+## Desktop content root — 2026-10-15
+
+22. **Pin the backend content root to the exe folder.** Double-clicking `start.bat`
+    launches with the repo as working directory, so the backend looked for
+    `wwwroot/` and `appsettings.json` in the wrong place (UI 404, default config).
+    `AppHost.Create` takes an optional content root; the desktop host passes
+    `AppContext.BaseDirectory`, and the launcher also sets the working directory.
+    Covered by `AppHostTests` (explicit root honored, no disk writes).
+
 ## Steam game detection — 2026-10-15
 
 22. **Find every Steam install, or show the setup screen.** `SteamContentLocator`

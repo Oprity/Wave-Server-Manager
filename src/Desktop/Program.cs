@@ -111,6 +111,8 @@ internal static class DesktopRunner
             window = new PhotinoWindow()
                 .SetTitle(AppTitleConst)
                 .SetUseOsDefaultSize(false)
+                .SetChromeless(true)
+                .RegisterWebMessageReceivedHandler(HandleWebMessage)
                 .SetSize(new System.Drawing.Size(1280, 800))
                 .Center()
                 .SetResizable(true)
@@ -147,6 +149,35 @@ internal static class DesktopRunner
             void OnViewLogs() => OpenLogsFolder();
 
             void OnQuit() => window?.Close();
+
+            void HandleWebMessage(object? sender, string message)
+            {
+                var w = window;
+                if (w is null)
+                {
+                    return;
+                }
+                // Marshal onto the Photino UI thread; messages arrive from the
+                // WebView2 bridge on an arbitrary thread.
+                w.Invoke(() =>
+                {
+                    switch (message)
+                    {
+                        case "wm:minimize":
+                            w.SetMinimized(true);
+                            break;
+                        case "wm:maximize":
+                            w.SetMaximized(!w.Maximized);
+                            break;
+                        case "wm:close":
+                            w.Close();
+                            break;
+                        case "wm:drag":
+                            BeginWindowDrag(w.WindowHandle);
+                            break;
+                    }
+                });
+            }
         }
         finally
         {
@@ -191,6 +222,27 @@ internal static class DesktopRunner
         var dir = LogFiles.DefaultDirectory;
         Directory.CreateDirectory(dir);
         Process.Start(new ProcessStartInfo { FileName = dir, UseShellExecute = true });
+    }
+
+    private const int WmNcLButtonDown = 0xA1;
+    private const int HtCaption = 0x2;
+
+    [DllImport("user32.dll")]
+    private static extern bool ReleaseCapture();
+
+    [DllImport("user32.dll")]
+    private static extern nint SendMessage(nint hWnd, int msg, nint wParam, nint lParam);
+
+    /// <summary>Standard borderless-drag: let Windows move the window as if its
+    /// caption was grabbed. Called on the UI thread via Photino Invoke.</summary>
+    private static void BeginWindowDrag(nint hwnd)
+    {
+        if (hwnd == 0 || !OperatingSystem.IsWindows())
+        {
+            return;
+        }
+        ReleaseCapture();
+        SendMessage(hwnd, WmNcLButtonDown, HtCaption, 0);
     }
 
     private static void ShowError(string message) =>

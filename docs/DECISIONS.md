@@ -97,9 +97,19 @@
     controller scanning (`/healthz` worked, every `/api/*` fell through to the SPA).
     `AppHost` now registers the Server assembly explicitly; harmless standalone.
 
+## Chromeless custom title bar — 2026-10-15
+
+22. **Native chrome off, our own title bar.** `SetChromeless(true)`; the React
+    `TitleBar` (icon, title, min/max/close, drag + double-click maximize) renders
+    only inside the desktop shell (`window.external.sendMessage` detection, so plain
+    browsers keep OS chrome). Window commands travel `sendMessage('wm:*')` to a C#
+    handler marshalled via `Photino.Invoke`; dragging uses the standard
+    Win32 `ReleaseCapture` + `WM_NCLBUTTONDOWN/HTCAPTION` trick on
+    `window.WindowHandle`. Covered by `desktop.test.ts`; visuals confirmed by user.
+
 ## Desktop content root — 2026-10-15
 
-22. **Pin the backend content root to the exe folder.** Double-clicking `start.bat`
+23. **Pin the backend content root to the exe folder.** Double-clicking `start.bat`
     launches with the repo as working directory, so the backend looked for
     `wwwroot/` and `appsettings.json` in the wrong place (UI 404, default config).
     `AppHost.Create` takes an optional content root; the desktop host passes
@@ -108,7 +118,7 @@
 
 ## App icon — 2026-10-15
 
-23. **Custom emerald-on-dark wave icon** (`src/Desktop/app.ico`, generated with
+24. **Custom emerald-on-dark wave icon** (`src/Desktop/app.ico`, generated with
     multi-size PNG entries). Embedded in the exe via `ApplicationIcon`; the window
     (`SetIconFile`) and tray load the file copy, which needs
     `ExcludeFromSingleFile=true` or it gets swallowed into the bundle (same trap
@@ -116,7 +126,7 @@
 
 ## Steam game detection — 2026-10-15
 
-22. **Find every Steam install, or show the setup screen.** `SteamContentLocator`
+25. **Find every Steam install, or show the setup screen.** `SteamContentLocator`
     reads the registry + default paths, parses new- and legacy-format
     `libraryfolders.vdf`, and accepts a folder with `AssettoCorsa.exe`/`content/`
     (appid 244210). `ContentPathsService` layers a validated manual override

@@ -45,6 +45,7 @@ mirrored via linked Content item.
 | `src/pages/ProfilesPage.tsx` | List, status badges, start/stop/restart/duplicate/delete, binary-missing banner |
 | `src/pages/ProfileEditPage.tsx` | Form (name, ports, password, max clients, track, cars CSV, flags, exe override) + `LogPanel` |
 | `src/components/LogPanel.tsx` | SignalR client: recent-logs fetch + `JoinProfile` → live `LogReceived` stream |
+| `src/components/TitleBar.tsx` | Chromeless-window title bar (desktop shell only): drag, min/max/close via `wm:*` messages |
 | `src/api/client.ts` | Typed `fetch` wrapper with server `error` extraction |
 | `src/utils/cars.ts` | CSV parse/join + content-name validation (mirrors backend rules) |
 | `scripts/copy-to-server.mjs` | `npm run build:server` → copies `dist/` into `src/Server/wwwroot/` |

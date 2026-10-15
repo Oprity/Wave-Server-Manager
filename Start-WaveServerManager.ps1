@@ -73,6 +73,22 @@ $csNewest = Get-ChildItem -Path (Join-Path $root 'src') -Recurse -File -Filter '
 $exeMissing = -not (Test-Path $exe)
 $exeStale = $exeMissing -or ($null -ne $csNewest -and $csNewest.LastWriteTime -gt (Get-Item $exe).LastWriteTime)
 if ($exeStale) {
+  # The exe cannot be overwritten while it runs: ask a running instance to
+  # close (lets the backend stop cleanly), force-kill only as a fallback.
+  $running = Get-Process -Name 'WaveServerManager.Desktop' -ErrorAction SilentlyContinue
+  if ($running) {
+    Write-Host 'Closing the running app so it can be updated...'
+    $running | ForEach-Object { try { $_.CloseMainWindow() | Out-Null } catch { } }
+    $deadline = (Get-Date).AddSeconds(15)
+    while ((Get-Process -Name 'WaveServerManager.Desktop' -ErrorAction SilentlyContinue) -and (Get-Date) -lt $deadline) {
+      Start-Sleep 1
+    }
+    $still = Get-Process -Name 'WaveServerManager.Desktop' -ErrorAction SilentlyContinue
+    if ($still) {
+      $still | Stop-Process -Force
+      Start-Sleep 2
+    }
+  }
   Write-Host 'Publishing desktop app (first run takes a while)...'
   & dotnet publish (Join-Path $root 'src/Desktop') -c Release -r win-x64 --self-contained `
     -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `

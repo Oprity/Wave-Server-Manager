@@ -106,6 +106,14 @@
     `AppContext.BaseDirectory`, and the launcher also sets the working directory.
     Covered by `AppHostTests` (explicit root honored, no disk writes).
 
+## App icon — 2026-10-15
+
+23. **Custom emerald-on-dark wave icon** (`src/Desktop/app.ico`, generated with
+    multi-size PNG entries). Embedded in the exe via `ApplicationIcon`; the window
+    (`SetIconFile`) and tray load the file copy, which needs
+    `ExcludeFromSingleFile=true` or it gets swallowed into the bundle (same trap
+    as `wwwroot/` would be without the linked-content copy).
+
 ## Steam game detection — 2026-10-15
 
 22. **Find every Steam install, or show the setup screen.** `SteamContentLocator`

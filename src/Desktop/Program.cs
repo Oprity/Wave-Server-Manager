@@ -106,7 +106,8 @@ internal static class DesktopRunner
             Application.EnableVisualStyles();
 
             PhotinoWindow? window = null;
-            using var tray = new TrayMenu(AppTitleConst, OnOpen, OnViewLogs, OnQuit);
+            var iconPath = Path.Combine(AppContext.BaseDirectory, "app.ico");
+            using var tray = new TrayMenu(AppTitleConst, iconPath, OnOpen, OnViewLogs, OnQuit);
             window = new PhotinoWindow()
                 .SetTitle(AppTitleConst)
                 .SetUseOsDefaultSize(false)
@@ -114,8 +115,12 @@ internal static class DesktopRunner
                 .Center()
                 .SetResizable(true)
                 .SetDevToolsEnabled(false)
-                .SetContextMenuEnabled(false)
-                .Load(url);
+                .SetContextMenuEnabled(false);
+            if (File.Exists(iconPath))
+            {
+                window.SetIconFile(iconPath);
+            }
+            window.Load(url);
 
             // Blocks on the native message loop (which also pumps tray messages).
             // Closing the window returns here, then we shut the backend down.

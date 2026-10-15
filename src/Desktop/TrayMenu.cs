@@ -16,7 +16,7 @@ internal sealed class TrayMenu : IDisposable
     private readonly NotifyIcon _icon;
     private bool _disposed;
 
-    public TrayMenu(string title, Action onOpen, Action onViewLogs, Action onQuit)
+    public TrayMenu(string title, string? iconPath, Action onOpen, Action onViewLogs, Action onQuit)
     {
         var menu = new ContextMenuStrip();
         menu.Items.Add(new ToolStripMenuItem("Open", null, (_, _) => onOpen()));
@@ -26,12 +26,28 @@ internal sealed class TrayMenu : IDisposable
 
         _icon = new NotifyIcon
         {
-            Icon = SystemIcons.Application,
+            Icon = LoadIcon(iconPath),
             Text = title,
             Visible = true,
             ContextMenuStrip = menu,
         };
         _icon.DoubleClick += (_, _) => onOpen();
+    }
+
+    private static Icon LoadIcon(string? iconPath)
+    {
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(iconPath) && File.Exists(iconPath))
+            {
+                return new Icon(iconPath);
+            }
+        }
+        catch
+        {
+            // Fall through to the default icon.
+        }
+        return SystemIcons.Application;
     }
 
     public void Dispose()
